@@ -14,10 +14,33 @@ module ExceptionNotifier
     end
 
     def call(exception, options={})
-      message = "An exception occurred: '#{exception.message}' on '#{exception.backtrace.first}'"
-      @notifier.ping(message, @message_opts) if valid?
+      
+      title = "#{exception.message}"
+      
+      message = "------------------------------------------------------------------------------------------\n"
+      message += "*Project:* #{Rails.application.class.parent_name}\n"
+      message += "*Environment:* #{Rails.env}\n"
+      message += "*Time:* #{Time.zone.now.strftime('%Y-%m-%d %H:%M:%S')}\n"
+      message += "*Exception:* `#{exception.message}`\n"
+      message += "\n"
+      message += "*Backtrace*: \n"
+      message += "#{exception.backtrace.first}"
+      
+      notifier = Slack::Notifier.new slack_options.fetch(:webhook_url),
+                                     channel: slack_options.fetch(:channel),
+                                     username: slack_options.fetch(:username),
+                                     icon_emoji: slack_options.fetch(:icon_emoji),
+                                     attachments: [{
+                                       color: 'danger',
+                                       title: title,
+                                       text: message,
+                                       mrkdwn_in: %w(text title fallback)
+                                     }]
+                                     
+      #notifier.ping(message, @message_opts) if valid?
+      notifier.ping ''
     end
-
+    
     protected
 
     def valid?
