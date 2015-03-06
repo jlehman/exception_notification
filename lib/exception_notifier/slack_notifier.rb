@@ -5,6 +5,7 @@ module ExceptionNotifier
 
     def initialize(options)
       begin
+        @slack_options = options
         webhook_url = options.fetch(:webhook_url)
         @message_opts = options.fetch(:additional_parameters, {})
         @notifier = Slack::Notifier.new webhook_url, options
@@ -26,10 +27,10 @@ module ExceptionNotifier
       message += "*Backtrace*: \n"
       message += "#{exception.backtrace.first}"
       
-      notifier = Slack::Notifier.new slack_options.fetch(:webhook_url),
-                                     channel: slack_options.fetch(:channel),
-                                     username: slack_options.fetch(:username),
-                                     icon_emoji: slack_options.fetch(:icon_emoji),
+      notifier = Slack::Notifier.new @slack_options.fetch(:webhook_url),
+                                     channel: @slack_options.fetch(:channel),
+                                     username: @slack_options.fetch(:username),
+                                     icon_emoji: @slack_options.fetch(:icon_emoji),
                                      attachments: [{
                                        color: 'danger',
                                        title: title,
