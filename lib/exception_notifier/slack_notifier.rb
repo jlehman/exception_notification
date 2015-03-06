@@ -26,7 +26,8 @@ module ExceptionNotifier
       message += "\n"
       message += "*Backtrace*: \n"
       exception.backtrace.each_with_index do |bt, i|
-        message += "#{bt}"
+        val = bt.gsub("`", "'")
+        message += "#{val}"
         break if i > 4
       end
       #message += "#{exception.backtrace.first}"
