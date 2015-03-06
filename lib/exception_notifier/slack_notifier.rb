@@ -36,7 +36,7 @@ module ExceptionNotifier
                                      username: @slack_options.fetch(:username),
                                      icon_emoji: @slack_options.fetch(:icon_emoji),
                                      attachments: [{
-                                       color: 'danger',
+                                       color: @slack_options.fetch(:color),
                                        title: title,
                                        text: message,
                                        mrkdwn_in: %w(text title fallback)
