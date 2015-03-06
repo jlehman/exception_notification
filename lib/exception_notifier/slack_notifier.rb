@@ -18,14 +18,18 @@ module ExceptionNotifier
       
       title = "#{exception.message}"
       
-      message = "------------------------------------------------------------------------------------------\n"
+      message = "- - - - - - - - - - - -\n"
       message += "*Project:* #{Rails.application.class.parent_name}\n"
       message += "*Environment:* #{Rails.env}\n"
       message += "*Time:* #{Time.zone.now.strftime('%Y-%m-%d %H:%M:%S')}\n"
       message += "*Exception:* `#{exception.message}`\n"
       message += "\n"
       message += "*Backtrace*: \n"
-      message += "#{exception.backtrace.first}"
+      exception.backtrace.each_with_index do |bt, i|
+        message += "#{bt}"
+        break if i > 4
+      end
+      #message += "#{exception.backtrace.first}"
       
       notifier = Slack::Notifier.new @slack_options.fetch(:webhook_url),
                                      channel: @slack_options.fetch(:channel),
