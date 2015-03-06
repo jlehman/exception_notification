@@ -19,9 +19,8 @@ module ExceptionNotifier
       title = "#{exception.message}"
       
       message = "- - - - - - - - - - - -\n"
-      message += "*Project:* #{Rails.application.class.parent_name}\n"
       message += "*Environment:* #{Rails.env}\n"
-      message += "*Time:* #{Time.zone.now.strftime('%Y-%m-%d %H:%M:%S')}\n"
+      message += "*Time:* #{Time.now.in_time_zone(ActiveSupport::TimeZone.new('Central Time (US & Canada)')).strftime('%m/%d/%Y at %I:%M %p CST')}\n"
       message += "*Exception:* `#{exception.message}`\n"
       message += "\n"
       message += "*Backtrace*: \n"
